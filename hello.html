@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Melonpan — Golden, Buttery, Irresistible</title>
+  <meta name="description" content="Melonpan: Japanese sweet bread with a crisp sugar shell and fluffy inside. Order now or find us near you!" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --accent:#F7B267;
+      --accent-2:#F1845C;
+      --bg:#FFF8F2;
+      --card:#ffffff;
+      --muted:#6B6B6B;
+      --radius:18px;
+      --price:3.5; /* price in dollars (number) */
+      font-family: 'Nunito', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,var(--bg),#fff);color:#222;min-height:100vh}
+    .container{max-width:1100px;margin:36px auto;padding:24px}
+
+    /* Header */
+    header{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:56px;height:56px;border-radius:12px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,0.08)}
+    .logo img{width:100%;height:100%;object-fit:cover;display:block}
+    h1{font-size:1.2rem;margin:0}
+    .tag{font-size:.9rem;color:var(--muted)}
+    nav{display:flex;gap:10px}
+    .btn{background:var(--accent);border:none;padding:10px 14px;border-radius:12px;color:white;font-weight:700;cursor:pointer;transition:transform .18s ease, box-shadow .18s ease}
+    .btn:active{transform:scale(.98)}
+
+    /* Hero */
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;margin-top:22px}
+    .left{padding:18px}
+    .eyebrow{display:inline-block;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;padding:6px 10px;border-radius:999px;font-weight:800;font-size:.8rem}
+    h2{font-size:2.1rem;margin:12px 0 6px;line-height:1.02}
+    p.lead{color:var(--muted);margin:8px 0 18px}
+    .features{display:flex;gap:10px;flex-wrap:wrap}
+    .chip{background:#fff;padding:10px 12px;border-radius:12px;box-shadow:0 8px 26px rgba(227,170,142,0.12);font-weight:700}
+
+    /* Card / image */
+    .card{background:var(--card);border-radius:20px;padding:12px;box-shadow:0 20px 50px rgba(217,150,108,0.12);transition:transform .35s cubic-bezier(.2,.9,.2,1), box-shadow .35s}
+    .card:hover{transform:translateY(-6px);box-shadow:0 30px 80px rgba(217,150,108,0.16)}
+    .product-img{border-radius:14px;overflow:hidden}
+    .product-img img{display:block;width:100%;height:100%;object-fit:cover}
+
+    /* Sections */
+    section.info{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px}
+    .info .info-card{background:white;border-radius:14px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,0.04);transition:transform .22s ease, box-shadow .22s ease}
+    .info .info-card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(0,0,0,0.08)}
+    .info .info-card h3{margin:6px 0}
+    .price{font-size:1.6rem;font-weight:900;color:#283043}
+
+    /* Flavors colorful text */
+    .info-card[data-flavor="Strawberry"]{color:#C4375A;background:#FFE4EC}
+    .info-card[data-flavor="Coffee"]{color:#8A6A1F;background:#F3E5AB}
+    .info-card[data-flavor="Custard Filled"]{color:#C29200;background:#FFF5CC}
+    .info-card[data-flavor="Vanilla"]{color:#C58A2A;background:#FFF7E6}
+    .info-card[data-flavor="Honeydew"]{color:#4E8B37;background:#E4FCD9}
+    .info-card[data-flavor="Black Sesame"]{color:#444444;background:#F2F2F2}
+    .info-card[data-flavor="Ube"]{color:#7A4FD8;background:#EDE1FF}
+    .info-card[data-flavor="Cinnamon"]{color:#C1671C;background:#FFEAD1}
+    .info-card[data-flavor="Classic"]{color:#9A632F;background:#FFF6EE}
+    .info-card[data-flavor="Matcha"]{color:#2E7D32;background:#E8F5E9}
+    .info-card[data-flavor="Chocolate"]{color:#5B3A29;background:#F5E8E4}
+
+    /* Order bar */
+    .order-bar{position:sticky;bottom:18px;background:linear-gradient(90deg,rgba(255,255,255,0.95),rgba(255,255,255,0.9));backdrop-filter:blur(6px);padding:12px;border-radius:14px;display:flex;gap:12px;align-items:center;justify-content:space-between;box-shadow:0 10px 40px rgba(0,0,0,0.06)}
+    .order-left{display:flex;align-items:center;gap:12px}
+
+    /* Footer */
+    footer{margin-top:38px;color:var(--muted);font-size:.9rem;text-align:center}
+
+    /* Animations */
+    .fade-up{opacity:0;transform:translateY(18px);transition:opacity .6s ease, transform .6s cubic-bezier(.2,.9,.2,1)}
+    .fade-up.in{opacity:1;transform:translateY(0)}
+    .pulse-click{animation:pulse .45s ease}
+    @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.06)}100%{transform:scale(1)}}
+
+    /* Modal cart */
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;z-index:1200;opacity:0;transition:opacity .25s ease}
+    .overlay.show{display:flex;opacity:1}
+    .cart-modal{width:92%;max-width:520px;background:white;border-radius:14px;padding:18px;box-shadow:0 30px 80px rgba(0,0,0,0.24);transform:translateY(18px);opacity:0;transition:transform .28s cubic-bezier(.2,.9,.2,1),opacity .28s}
+    .overlay.show .cart-modal{transform:translateY(0);opacity:1}
+    .cart-header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f0f0f0;padding-bottom:8px;margin-bottom:12px}
+    .cart-list{max-height:320px;overflow:auto;margin-bottom:12px}
+    .cart-row{display:flex;align-items:center;justify-content:space-between;padding:8px 4px;border-radius:8px}
+    .remove-btn{background:transparent;border:none;color:#c44;cursor:pointer;font-weight:700;padding:6px;border-radius:8px}
+    .close-x{background:transparent;border:none;font-weight:900;font-size:16px;cursor:pointer;padding:6px;border-radius:8px;transition:transform .18s}
+    .close-x:hover{transform:rotate(18deg)}
+
+    /* Flavor card layout adjustments for responsive */
+    @media (max-width:980px){
+      .hero{grid-template-columns:1fr}
+      .product-img img{height:320px}
+      section.info{grid-template-columns:1fr}
+    }
+
+    /* Small helpers */
+    .muted{color:var(--muted)}
+    .flavor-badge{display:inline-block;padding:8px 10px;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;font-weight:800}
+    .flavor-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+    .flavor-card{background:linear-gradient(180deg,#fff, #fff);border-radius:12px;padding:12px;box-shadow:0 8px 30px rgba(0,0,0,0.04);transition:transform .22s,box-shadow .22s;border:1px solid rgba(0,0,0,0.03)}
+    .flavor-card:hover{transform:translateY(-8px);box-shadow:0 20px 50px rgba(0,0,0,0.08)}
+    .flavor-title{font-weight:800;margin:8px 0;font-size:1rem}
+    .flavor-sub{font-size:.92rem;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"><img src="https://asianinspirations.com.au/wp-content/uploads/2021/04/R01529-Melon-Pan-1500w.jpg" alt="Melonpan close-up"></div>
+        <div>
+          <h1>Melonpan Bakery</h1>
+          <div class="tag">Crispy shell — cloud-soft inside</div>
+        </div>
+      </div>
+      <nav>
+        <button class="btn" id="open-cart-btn" title="Open cart">Cart</button>
+        <button class="btn" onclick="document.getElementById('order').scrollIntoView({behavior:'smooth'})">Order Now</button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero fade-up" aria-labelledby="hero-title">
+        <div class="left">
+          <span class="eyebrow">Best Seller</span>
+          <h2 id="hero-title">Melonpan — The Japanese Sweet Bread Everyone Loves</h2>
+          <p class="lead">Golden, sugar-crisp top with a pillowy, buttery crumb. Perfect with coffee or as a snack on the go. Baked fresh daily using time-honoured technique and premium ingredients.</p>
+
+          <div class="features" aria-hidden="true">
+            <div class="chip">Crunchy Sugar Crust</div>
+            <div class="chip">Made with Butter</div>
+            <div class="chip">Baked Fresh Daily</div>
+          </div>
+
+          <div style="margin-top:18px;display:flex;gap:12px;align-items:center">
+            <button class="btn" id="buy-one" onclick="document.getElementById('order').scrollIntoView({behavior:'smooth'})">Buy 1 — $3.50</button>
+            <button style="background:none;border:2px solid var(--accent);padding:8px 12px;border-radius:10px;font-weight:700;cursor:pointer" onclick="document.getElementById('flavors').scrollIntoView({behavior:'smooth'})">See Flavours</button>
+          </div>
+
+          <div style="margin-top:22px;color:var(--muted)">
+            <strong>Why you'll love it</strong>
+            <ul>
+              <li>Sweet and buttery with a satisfying crunch.</li>
+              <li>Vegetarian-friendly (contains eggs & dairy).</li>
+              <li>Pairs perfectly with espresso or milk tea.</li>
+            </ul>
+          </div>
+        </div>
+
+        <aside class="card">
+          <div class="product-img">
+            <img src="https://asianinspirations.com.au/wp-content/uploads/2021/04/R01529-Melon-Pan-1500w.jpg" alt="Fresh melonpan on wooden board">
+          </div>
+          <div style="padding:12px 8px">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div>
+                <div style="font-weight:800">Classic Melonpan</div>
+                <div style="font-size:0.9rem;color:var(--muted)">Crispy, buttery, timeless</div>
+              </div>
+              <div class="price">$3.50</div>
+            </div>
+            <p style="margin-top:10px;color:var(--muted)">Limited-time: get 3 for $9.50 — perfect for sharing or a sweet breakfast box.</p>
+          </div>
+        </aside>
+      </section>
+
+      <section id="flavors" class="fade-up" style="margin-top:26px">
+        <h3 style="margin:0 0 10px">Flavours & Variations</h3>
+
+        <!-- compact flavor grid -->
+        <div class="flavor-grid" aria-hidden="false">
+          <div class="flavor-card" data-flavor="Classic">
+            <div class="flavor-title">Classic</div>
+            <div class="flavor-sub muted">The beloved sugar-crust original.</div>
+            <div style="margin-top:10px">
+              <button class="btn add-flavor" data-flavor="Classic">Add Classic</button>
+            </div>
+          </div>
+
+          <div class="flavor-card" data-flavor="Matcha">
+            <div class="flavor-title">Matcha</div>
+            <div class="flavor-sub muted">Green-tea infused shell & dough.</div>
+            <div style="margin-top:10px">
+              <button class="btn add-flavor" data-flavor="Matcha">Add Matcha</button>
+            </div>
+          </div>
+
+          <div class="flavor-card" data-flavor="Chocolate">
+            <div class="flavor-title">Chocolate</div>
+            <div class="flavor-sub muted">Cocoa in the shell and chocolate chips inside.</div>
+            <div style="margin-top:10px">
+              <button class="btn add-flavor" data-flavor="Chocolate">Add Chocolate</button>
+            </div>
+          </div>
+
+          <div class="flavor-card" data-flavor="Strawberry">
+            <div class="flavor-title">Strawberry</div>
+            <div class="flavor-sub muted">A sweet pink shell with a delicate berry aroma.</div>
+            <div style="margin-top:10px">
+              <button class="btn add-flavor" data-flavor="Strawberry">Add Strawberry</button>
+            </div>
+          </div>
+
+          <div class="flavor-card" data-flavor="Coffee">
+            <div class="flavor-title">Coffee</div>
+            <div class="flavor-sub muted">A rich, aromatic twist for caffeine fans.</div>
+            <div style="margin-top:10px">
+              <button class="btn add-flavor" data-flavor="Coffee">Add Coffee</button>
+            </div>
+          </div>
+
+          <div class="flavor-card" data-flavor="Custard Filled">
+            <div class="flavor-title">Custard Filled</div>
+            <div class="flavor-sub muted">Soft custard cream inside the classic shell.</div>
+            <div style="margin-top:10px">
+              <button class="btn add-flavor" data-flavor="Custard Filled">Add Custard</button>
+            </div>
+          </div>
+
+          <div class="flavor-card" data-flavor="Vanilla">
+            <div class="flavor-title">Vanilla</div>
+            <div class="flavor-sub muted">Light, sweet, and universally loved.</div>
+            <div style="margin-top:10px">
+              <button class="btn add-flavor" data-flavor="Vanilla">Add Vanilla</button>
+            </div>
+          </div>
+
+          <div class="flavor-card" data-flavor="Honeydew">
+            <div class="flavor-title">Honeydew</div>
+            <div class="flavor-sub muted">Inspired by the melon that gave Melonpan its name.</div>
+            <div style="margin-top:10px">
+              <button class="btn add-flavor" data-flavor="Honeydew">Add Honeydew</button>
+            </div>
+          </div>
+
+          <div class="flavor-card" data-flavor="Black Sesame">
+            <div class="flavor-title">Black Sesame</div>
+            <div class="flavor-sub muted">Nutty, fragrant, and deeply earthy.</div>
+            <div style="margin-top:10px">
+              <button class="btn add-flavor" data-flavor="Black Sesame">Add Black Sesame</button>
+            </div>
+          </div>
+
+          <div class="flavor-card" data-flavor="Ube">
+            <div class="flavor-title">Ube</div>
+            <div class="flavor-sub muted">Purple yam flavour with a naturally sweet profile.</div>
+            <div style="margin-top:10px">
+              <button class="btn add-flavor" data-flavor="Ube">Add Ube</button>
+            </div>
+          </div>
+
+          <div class="flavor-card" data-flavor="Cinnamon">
+            <div class="flavor-title">Cinnamon</div>
+            <div class="flavor-sub muted">Warm, cozy, and perfect for chilly days.</div>
+            <div style="margin-top:10px">
+              <button class="btn add-flavor" data-flavor="Cinnamon">Add Cinnamon</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="order" class="fade-up" style="margin-top:26px">
+        <h3 style="margin-bottom:8px">Order & Pickup</h3>
+        <p style="color:var(--muted)">Place your order for pickup today — no account required. Walk-ins welcome while stocks last.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;align-items:center">
+          <select id="flavor" aria-label="choose flavor" style="padding:10px;border-radius:10px;border:1px solid #eee;min-width:160px">
+            <option value="Classic">Classic</option>
+            <option value="Matcha">Matcha</option>
+            <option value="Chocolate">Chocolate</option>
+            <option value="Strawberry">Strawberry</option>
+            <option value="Coffee">Coffee</option>
+            <option value="Custard Filled">Custard Filled</option>
+            <option value="Vanilla">Vanilla</option>
+            <option value="Honeydew">Honeydew</option>
+            <option value="Black Sesame">Black Sesame</option>
+            <option value="Ube">Ube</option>
+            <option value="Cinnamon">Cinnamon</option>
+          </select>
+
+          <input aria-label="quantity" id="qty" type="number" min="1" value="1" style="padding:10px;border-radius:10px;border:1px solid #eee;width:120px">
+          <button class="btn" id="add-order-btn">Add to Cart — $3.50</button>
+          <button style="background:none;border:1px dashed var(--accent);padding:10px 12px;border-radius:10px;cursor:pointer" onclick="alert('Opening delivery partners...')">Delivery</button>
+        </div>
+      </section>
+
+      <!-- About Us (emotional) -->
+      <section id="about" style="margin-top:40px;background:linear-gradient(135deg,#FFF3E0,#FFE8D6);padding:24px;border-radius:18px;box-shadow:0 8px 24px rgba(0,0,0,0.05)" class="fade-up">
+        <h3 style="color:#D47A3C">About Us</h3>
+        <p style="color:#B55E28">Melonpan Bakery began as a small dream — the kind you can smell before it even exists. It started with the warm memory of stepping into a tiny shop in Japan, where the air was sweet, the ovens glowed softly, and a single bite of melonpan felt like home.</p>
+        <p style="color:#C4682B">We wanted to bring that feeling here — the quiet joy of holding something made with care, the comfort of a crunch that gives way to softness, the simple happiness baked into every bun. Every melonpan we make is a little love letter to those moments: warm, nostalgic, and meant to be shared.</p>
+        <p style="color:#A0521F">We’re more than a bakery. We’re a place where memories are recreated, where the scent of caramelized sugar welcomes you like an old friend, and where every bun carries a story — yours, ours, and the ones still waiting to be made.</p>
+      </section>
+
+      <!-- Expanded Flavors (colorful text preserved) -->
+      <section id="more-flavors" style="margin-top:40px" class="fade-up">
+        <h3>More Flavours to Explore</h3>
+        <div class="info" style="margin-top:14px">
+          <div class="info-card" data-flavor="Strawberry">
+            <h3>Strawberry</h3>
+            <p class="muted">A sweet pink shell with a delicate berry aroma.</p>
+            <p><strong>Perfect for:</strong> Spring treats & sweet lovers</p>
+          </div>
+          <div class="info-card" data-flavor="Coffee">
+            <h3>Coffee</h3>
+            <p class="muted">A rich, aromatic twist for caffeine fans.</p>
+            <p><strong>Pairs well with:</strong> Espresso or latte</p>
+          </div>
+          <div class="info-card" data-flavor="Custard Filled">
+            <h3>Custard Filled</h3>
+            <p class="muted">Soft custard cream inside the classic shell.</p>
+            <p><strong>Texture:</strong> Creamy center, crunchy top</p>
+          </div>
+          <div class="info-card" data-flavor="Vanilla">
+            <h3>Vanilla</h3>
+            <p class="muted">Light, sweet, and universally loved.</p>
+            <p><strong>Taste:</strong> Smooth and comforting</p>
+          </div>
+          <div class="info-card" data-flavor="Honeydew">
+            <h3>Honeydew</h3>
+            <p class="muted">Inspired by the melon that gave Melonpan its name.</p>
+            <p><strong>Aroma:</strong> Fresh and fruity</p>
+          </div>
+          <div class="info-card" data-flavor="Black Sesame">
+            <h3>Black Sesame</h3>
+            <p class="muted">Nutty, fragrant, and deeply earthy.</p>
+            <p><strong>Perfect for:</strong> Fans of traditional Japanese flavours</p>
+          </div>
+          <div class="info-card" data-flavor="Ube">
+            <h3>Ube</h3>
+            <p class="muted">Purple yam flavour with a naturally sweet profile.</p>
+            <p><strong>Texture:</strong> Soft and flavourful</p>
+          </div>
+          <div class="info-card" data-flavor="Cinnamon">
+            <h3>Cinnamon</h3>
+            <p class="muted">Warm, cozy, and perfect for chilly days.</p>
+            <p><strong>Pairs well with:</strong> Milk tea or latte</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Us -->
+      <section id="contact" style="margin-top:40px" class="fade-up">
+        <h3>Contact Us</h3>
+        <p style="color:var(--muted)">Questions, bulk orders, or catering inquiries? We’d love to hear from you!</p>
+        <div style="margin-top:12px;line-height:1.6">
+          <p><strong>Email:</strong> hello@melonpanbakery.com</p>
+          <p><strong>Phone:</strong> +62 812-3456-7890</p>
+          <p><strong>Location:</strong> Jakarta, Indonesia</p>
+        </div>
+      </section>
+
+    </main>
+
+    <div style="height:12px"></div>
+
+    <div class="order-bar" role="region" aria-label="quick order">
+      <div class="order-left">
+        <img src="https://asianinspirations.com.au/wp-content/uploads/2021/04/R01529-Melon-Pan-1500w.jpg" alt="mini melonpan" style="width:64px;height:64px;border-radius:10px;object-fit:cover;box-shadow:0 6px 18px rgba(0,0,0,0.08)">
+        <div>
+          <div style="font-weight:800">Classic Melonpan</div>
+          <div style="color:var(--muted);font-size:.9rem">Freshly baked — ready now</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <div style="font-weight:900">$3.50</div>
+        <button class="btn" onclick="document.getElementById('order').scrollIntoView({behavior:'smooth'})">Order</button>
+      </div>
+    </div>
+
+    <footer id="footer">
+      <p>© Melonpan Bakery — Images: asianinspirations.com.au</p>
+    </footer>
+  </div>
+
+  <!-- Modal Cart Markup -->
+  <div id="cart-overlay" class="overlay" aria-hidden="true">
+    <div class="cart-modal" role="dialog" aria-modal="true" aria-labelledby="cart-title">
+      <div class="cart-header">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="font-weight:900" id="cart-title">🛒 Your Cart</div>
+          <div style="color:var(--muted);font-size:.9rem" id="cart-count">0 items</div>
+        </div>
+        <div>
+          <button class="close-x" id="close-cart" aria-label="Close cart">✕</button>
+        </div>
+      </div>
+
+      <div class="cart-list" id="cart-list" aria-live="polite">
+        <!-- items inserted here -->
+        <div style="color:var(--muted);padding:12px" id="cart-empty">Your cart is empty — add some melonpan!</div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid #f3f3f3">
+        <div style="font-weight:800">Total:</div>
+        <div style="font-weight:900" id="cart-total">$0.00</div>
+      </div>
+
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <button class="btn" id="checkout-btn">Checkout</button>
+        <button style="background:none;border:1px solid #ddd;padding:8px 12px;border-radius:10px;cursor:pointer" id="continue-btn">Continue Shopping</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ---------- Utilities ---------- */
+    const PRICE = Number(getComputedStyle(document.documentElement).getPropertyValue('--price')) || 3.5;
+
+    function formatMoney(n){
+      // digit-by-digit: ensure arithmetic correctness
+      const cents = Math.round(n * 100); // integer cents
+      const dollars = Math.floor(cents/100);
+      const rem = cents % 100;
+      return '$' + dollars + '.' + (rem < 10 ? '0' + rem : rem);
+    }
+
+    /* ---------- Cart state & DOM ---------- */
+    const cart = {}; // { flavor: qty }
+    const cartList = document.getElementById('cart-list');
+    const cartTotalEl = document.getElementById('cart-total');
+    const cartCountEl = document.getElementById('cart-count');
+    const cartEmptyEl = document.getElementById('cart-empty');
+    const overlay = document.getElementById('cart-overlay');
+    const openCartBtn = document.getElementById('open-cart-btn');
+    const closeCartBtn = document.getElementById('close-cart');
+    const checkoutBtn = document.getElementById('checkout-btn');
+    const continueBtn = document.getElementById('continue-btn');
+
+    function updateCartUI(){
+      // clear list
+      cartList.innerHTML = '';
+      const keys = Object.keys(cart);
+      if(keys.length === 0){
+        cartList.appendChild(cartEmptyEl);
+        cartEmptyEl.style.display = 'block';
+      } else {
+        cartEmptyEl.style.display = 'none';
+        keys.forEach(flavor => {
+          const qty = cart[flavor];
+          const row = document.createElement('div');
+          row.className = 'cart-row';
+          row.innerHTML = `
+            <div style="display:flex;flex-direction:column;">
+              <div style="font-weight:700">${flavor}</div>
+              <div style="font-size:.9rem;color:var(--muted)">Unit: ${formatMoney(PRICE)}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="font-weight:800">${qty} ×</div>
+              <div style="font-weight:900">${formatMoney(qty * PRICE)}</div>
+              <button class="remove-btn" data-flavor="${flavor}" aria-label="Remove ${flavor}">✕</button>
+            </div>
+          `;
+          cartList.appendChild(row);
+        });
+      }
+
+      // total
+      let total = 0;
+      keys.forEach(f => {
+        total += cart[f] * PRICE;
+      });
+      cartTotalEl.textContent = formatMoney(total);
+
+      // count
+      const totalItems = keys.reduce((s,k) => s + cart[k], 0);
+      cartCountEl.textContent = totalItems + (totalItems === 1 ? ' item' : ' items');
+    }
+
+    function addToCartFlavor(flavor, qty = 1){
+      // stack same flavor
+      const safeQty = Number(qty) || 1;
+      if(!cart[flavor]) cart[flavor] = 0;
+      cart[flavor] = cart[flavor] + safeQty;
+      // show animation/pulse
+      openCart(true);
+      updateCartUI();
+    }
+
+    function removeFromCart(flavor){
+      delete cart[flavor];
+      updateCartUI();
+    }
+
+    /* ---------- Event wiring ---------- */
+
+    // Add from select/order area
+    document.getElementById('add-order-btn').addEventListener('click', (e) => {
+      const flavor = document.getElementById('flavor').value;
+      const qty = Math.max(1, Number(document.getElementById('qty').value) || 1);
+      addToCartFlavor(flavor, qty);
+      // small pulse on button
+      e.currentTarget.classList.add('pulse-click');
+      setTimeout(()=> e.currentTarget.classList.remove('pulse-click'), 480);
+    });
+
+    // Add from flavor cards
+    document.querySelectorAll('.add-flavor').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const flavor = e.currentTarget.getAttribute('data-flavor');
+        addToCartFlavor(flavor, 1);
+        // quick visual feedback
+        e.currentTarget.classList.add('pulse-click');
+        setTimeout(()=> e.currentTarget.classList.remove('pulse-click'), 420);
+      });
+    });
+
+    // open/close overlay
+    function openCart(autoShow=false){
+      overlay.classList.add('show');
+      overlay.setAttribute('aria-hidden','false');
+      // wire remove buttons (delegated)
+      setTimeout(()=> {
+        document.querySelectorAll('.remove-btn').forEach(b=>{
+          b.addEventListener('click', (ev)=>{
+            const f = ev.currentTarget.getAttribute('data-flavor');
+            removeFromCart(f);
+          });
+        });
+      }, 50);
+      if(autoShow){
+        // slight focus
+        checkoutBtn.focus();
+      }
+    }
+    function closeCart(){
+      overlay.classList.remove('show');
+      overlay.setAttribute('aria-hidden','true');
+    }
+
+    openCartBtn.addEventListener('click', () => {
+      if(overlay.classList.contains('show')) closeCart();
+      else {
+        updateCartUI();
+        openCart();
+      }
+    });
+    closeCartBtn.addEventListener('click', closeCart);
+    continueBtn.addEventListener('click', closeCart);
+
+    // click outside closes
+    overlay.addEventListener('click', (ev) => {
+      if(ev.target === overlay) closeCart();
+    });
+
+    // ESC closes
+    document.addEventListener('keydown', (e) => {
+      if(e.key === 'Escape' && overlay.classList.contains('show')) closeCart();
+    });
+
+    // checkout (option 1): fake success message
+    checkoutBtn.addEventListener('click', () => {
+      // If empty, show quick notice
+      const items = Object.keys(cart).reduce((s,k)=> s + cart[k], 0);
+      if(items === 0){
+        alert('Your cart is empty — add a flavor first.');
+        return;
+      }
+      alert('Thank you! Your order has been submitted.');
+      // clear cart
+      for(const k of Object.keys(cart)) delete cart[k];
+      updateCartUI();
+      closeCart();
+    });
+
+    /* delegated removal binding: update after UI changes */
+    // handled inside updateCartUI call.
+
+    /* ---------- Animations on scroll ---------- */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if(e.isIntersecting) e.target.classList.add('in');
+      });
+    }, {threshold: 0.12});
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    /* ---------- Small UX polish: Buy 1 button behavior ---------- */
+    document.getElementById('buy-one').addEventListener('click', (ev) => {
+      // add one classic and open cart
+      addToCartFlavor('Classic', 1);
+      ev.currentTarget.classList.add('pulse-click');
+      setTimeout(()=> ev.currentTarget.classList.remove('pulse-click'), 420);
+    });
+
+    /* Initialize UI */
+    updateCartUI();
+    // wire remove buttons initially (none)
+  </script>
+</body>
+</html>
